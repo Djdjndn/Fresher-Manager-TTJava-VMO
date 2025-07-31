@@ -2,42 +2,37 @@ package com.example.fresher_manager.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.fresher_manager.entity.Fresher;
+import com.example.fresher_manager.dto.FresherDTO;
 import com.example.fresher_manager.service.FresherService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/freshers")
+@RequiredArgsConstructor
 public class FresherController {
 
-    @Autowired
-    private FresherService fresherService;
+    private final FresherService fresherService;
 
     @PostMapping
-    public ResponseEntity<Fresher> create(@RequestBody Fresher fresher) {
-        return ResponseEntity.ok(fresherService.createFresher(fresher));
+    public ResponseEntity<FresherDTO> create(@RequestBody FresherDTO dto) {
+        return ResponseEntity.ok(fresherService.createFresher(dto));
     }
 
-    @GetMapping
-    public ResponseEntity<List<Fresher>> getAll() {
-        return ResponseEntity.ok(fresherService.getAllFreshers());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Fresher> getById(@PathVariable Long id) {
-        return fresherService.getFresherById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @PutMapping("/{id}")
+    public ResponseEntity<FresherDTO> update(@PathVariable Long id, @RequestBody FresherDTO dto) {
+        return ResponseEntity.ok(fresherService.updateFresher(id, dto));
     }
 
     @DeleteMapping("/{id}")
@@ -46,13 +41,28 @@ public class FresherController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<Fresher>> searchByName(@RequestParam String name) {
+    @GetMapping("/{id}")
+    public ResponseEntity<FresherDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(fresherService.getFresherById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<FresherDTO>> getAll() {
+        return ResponseEntity.ok(fresherService.getAllFreshers());
+    }
+
+    @GetMapping("/search/name")
+    public ResponseEntity<List<FresherDTO>> searchByName(@RequestParam String name) {
         return ResponseEntity.ok(fresherService.searchByName(name));
     }
 
-    @GetMapping("/language")
-    public ResponseEntity<List<Fresher>> searchByLanguage(@RequestParam String lang) {
-        return ResponseEntity.ok(fresherService.searchByProgrammingLanguage(lang));
+    @GetMapping("/search/language")
+    public ResponseEntity<List<FresherDTO>> searchByLang(@RequestParam String language) {
+        return ResponseEntity.ok(fresherService.searchByProgrammingLanguage(language));
+    }
+
+    @GetMapping("/search/email")
+    public ResponseEntity<FresherDTO> searchByEmail(@RequestParam String email) {
+        return ResponseEntity.ok(fresherService.searchByEmail(email));
     }
 }

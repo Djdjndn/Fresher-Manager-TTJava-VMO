@@ -1,22 +1,24 @@
 package com.example.fresher_manager.entity;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "projects")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,19 +28,21 @@ public class Project {
     private Long id;
 
     private String name;
-
-    @Enumerated(EnumType.STRING)
-    private ProjectStatus status;
-
+    private String manager;
     private LocalDate startDate;
     private LocalDate endDate;
-
-    private String managerName;
+    private String programmingLanguage;
+    private String status; // ví dụ: not_start, ongoing, canceled, closed
 
     @ManyToOne
     @JoinColumn(name = "center_id")
     private Center center;
 
-    @OneToMany(mappedBy = "project")
-    private List<Assignment> assignments;
+    @ManyToMany
+    @JoinTable(
+        name = "project_fresher",
+        joinColumns = @JoinColumn(name = "project_id"),
+        inverseJoinColumns = @JoinColumn(name = "fresher_id")
+    )
+    private Set<Fresher> freshers = new HashSet<>();
 }

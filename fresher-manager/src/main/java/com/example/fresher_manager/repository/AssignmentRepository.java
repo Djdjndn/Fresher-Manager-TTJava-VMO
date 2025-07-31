@@ -11,4 +11,6 @@ import com.example.fresher_manager.entity.Project;
 public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     List<Assignment> findByFresher(Fresher fresher);
     List<Assignment> findByProject(Project project);
+    boolean existsByFresherAndProject(Fresher fresher, Project project);
+    void deleteByFresherAndProject(Fresher fresher, Project project);
 }
