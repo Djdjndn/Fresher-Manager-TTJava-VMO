@@ -3,6 +3,7 @@ package com.example.fresher_manager.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,7 @@ public class AssignmentController {
 
     private final AssignmentService assignmentService;
 
-    // 1. Phân công Fresher vào Project
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/assign")
     public ResponseEntity<Assignment> assignFresherToProject(
             @RequestParam Long fresherId,
@@ -32,7 +33,7 @@ public class AssignmentController {
         return ResponseEntity.ok(assignment);
     }
 
-    // 2. Hủy phân công Fresher khỏi Project
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/remove")
     public ResponseEntity<Void> removeFresherFromProject(
             @RequestParam Long fresherId,
@@ -41,14 +42,14 @@ public class AssignmentController {
         return ResponseEntity.noContent().build();
     }
 
-    // 3. Lấy danh sách phân công theo Fresher
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/by-fresher/{fresherId}")
     public ResponseEntity<List<Assignment>> getAssignmentsByFresher(@PathVariable Long fresherId) {
         List<Assignment> assignments = assignmentService.getAssignmentsByFresher(fresherId);
         return ResponseEntity.ok(assignments);
     }
 
-    // 4. Lấy danh sách phân công theo Project
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/by-project/{projectId}")
     public ResponseEntity<List<Assignment>> getAssignmentsByProject(@PathVariable Long projectId) {
         List<Assignment> assignments = assignmentService.getAssignmentsByProject(projectId);

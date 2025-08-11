@@ -3,6 +3,7 @@ package com.example.fresher_manager.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +25,7 @@ public class ScoreController {
 
     private final ScoreService scoreService;
 
-    // 1. Tạo điểm cho Fresher
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/fresher/{fresherId}")
     public ResponseEntity<Score> createScore(
             @PathVariable Long fresherId,
@@ -33,7 +34,7 @@ public class ScoreController {
         return ResponseEntity.ok(created);
     }
 
-    // 2. Cập nhật điểm
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{scoreId}")
     public ResponseEntity<Score> updateScore(
             @PathVariable Long scoreId,
@@ -42,14 +43,14 @@ public class ScoreController {
         return ResponseEntity.ok(updated);
     }
 
-    // 3. Xóa điểm
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{scoreId}")
     public ResponseEntity<Void> deleteScore(@PathVariable Long scoreId) {
         scoreService.deleteScore(scoreId);
         return ResponseEntity.noContent().build();
     }
 
-    // 4. Lấy tất cả điểm của một Fresher
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/fresher/{fresherId}")
     public ResponseEntity<List<Score>> getScoresByFresher(@PathVariable Long fresherId) {
         List<Score> scores = scoreService.getScoresByFresher(fresherId);
