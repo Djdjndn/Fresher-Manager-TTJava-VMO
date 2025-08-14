@@ -22,11 +22,29 @@ public class Score {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String subject; // Ví dụ: Java, SQL, Spring...
 
     private Double score;
 
     @ManyToOne
     @JoinColumn(name = "fresher_id", nullable = false)
     private Fresher fresher;
+
+    public double getMaxScore() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getMaxScore'");
+    }
+
+    public double getMinScore() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getMinScore'");
+    }
+
+    public Object getValue() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getValue'");
+    }
+
+    public void setFresher(Fresher fresher) {
+        this.fresher = fresher;
+    }
 }

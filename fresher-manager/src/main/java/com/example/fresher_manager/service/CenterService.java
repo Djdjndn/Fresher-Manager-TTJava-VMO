@@ -2,13 +2,14 @@ package com.example.fresher_manager.service;
 
 import java.util.List;
 
-import com.example.fresher_manager.dto.CenterDTO;
+import com.example.fresher_manager.dto.request.CenterRequest;
+import com.example.fresher_manager.entity.Center;
 
 public interface CenterService {
-    CenterDTO createCenter(CenterDTO dto);
-    CenterDTO updateCenter(Long id, CenterDTO dto);
+    Center createCenter(CenterRequest request);
+    Center updateCenter(Long id, CenterRequest request);
     void deleteCenter(Long id);
-    CenterDTO getCenterById(Long id);
-    List<CenterDTO> getAllCenters();
-    CenterDTO assignFresherToCenter(Long centerId, Long fresherId);
+    Center getCenterById(Long id);
+    List<Center> getAllCenters();
+    Center assignFresherToCenter(Long centerId, Long fresherId);
 }

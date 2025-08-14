@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.example.fresher_manager.dto.DashboardDTO;
 import com.example.fresher_manager.entity.Fresher;
 import com.example.fresher_manager.entity.Score;
 import com.example.fresher_manager.repository.FresherRepository;
@@ -35,14 +34,14 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public double getMaxAverageScore() {
+    public double getMaxScore() {
         return fresherRepository.findAll().stream()
                 .mapToDouble(f -> average(scoreRepository.findByFresherId(f.getId())))
                 .max().orElse(0.0);
     }
 
     @Override
-    public double getMinAverageScore() {
+    public double getMinScore() {
         return fresherRepository.findAll().stream()
                 .mapToDouble(f -> average(scoreRepository.findByFresherId(f.getId())))
                 .min().orElse(0.0);
@@ -51,7 +50,7 @@ public class DashboardServiceImpl implements DashboardService {
     @Override
     public Map<String, Long> getFresherCountByLanguage() {
         return fresherRepository.findAll().stream()
-                .collect(Collectors.groupingBy(Fresher::getProgrammingLanguage, Collectors.counting()));
+                .collect(Collectors.groupingBy(Fresher::getProgramingLanguage, Collectors.counting()));
     }
 
     @Override
@@ -63,15 +62,5 @@ public class DashboardServiceImpl implements DashboardService {
     private double average(List<Score> scores) {
         return scores.stream().mapToDouble(Score::getScore).average().orElse(0.0);
     }
-    @Override
-    public DashboardDTO getDashboardSummary() {
-        return new DashboardDTO(
-            getTotalFresher(),
-            getTotalProject(),
-            getMaxAverageScore(),
-            getMinAverageScore(),
-            getFresherCountByLanguage(),
-            getFresherCountByCenter()
-    );
 }
-}
+

@@ -2,16 +2,16 @@ package com.example.fresher_manager.service;
 
 import java.util.List;
 
-import com.example.fresher_manager.dto.FresherDTO;
+import com.example.fresher_manager.dto.request.FresherRequest;
+import com.example.fresher_manager.entity.Fresher;
 
 public interface FresherService {
-    FresherDTO createFresher(FresherDTO fresherDTO);
-    FresherDTO updateFresher(Long id, FresherDTO fresherDTO);
+    Fresher createFresher(FresherRequest request);
+    Fresher updateFresher(Long id, FresherRequest request);
     void deleteFresher(Long id);
-    FresherDTO getFresherById(Long id);
-
-    List<FresherDTO> getAllFreshers();
-    List<FresherDTO> searchByName(String name);
-    List<FresherDTO> searchByProgrammingLanguage(String language);
-    FresherDTO searchByEmail(String email);
+    Fresher getFresherById(Long id);
+    List<Fresher> getAllFreshers();
+    List<Fresher> searchByName(String name);
+    List<Fresher> searchByProgramingLanguage(String language);
+    Fresher searchByEmail(String email);
 }

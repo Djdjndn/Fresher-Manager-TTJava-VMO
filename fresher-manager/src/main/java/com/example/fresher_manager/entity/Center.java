@@ -10,14 +10,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name = "center")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Center {
 
     @Id
@@ -28,4 +31,9 @@ public class Center {
 
     @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
     private List<Fresher> freshers;
+
+    public Center(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

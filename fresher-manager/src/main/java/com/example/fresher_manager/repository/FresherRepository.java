@@ -9,6 +9,7 @@ import com.example.fresher_manager.entity.Fresher;
 
 public interface FresherRepository extends JpaRepository<Fresher, Long> {
     List<Fresher> findByNameContainingIgnoreCase(String name);
-    List<Fresher> findByProgrammingLanguageContainingIgnoreCase(String programmingLanguage);
+    List<Fresher> findByProgramingLanguageContainingIgnoreCase(String programingLanguage);
     Optional<Fresher> findByEmail(String email); // email là duy nhất
+    boolean existsByName(String name);
 }

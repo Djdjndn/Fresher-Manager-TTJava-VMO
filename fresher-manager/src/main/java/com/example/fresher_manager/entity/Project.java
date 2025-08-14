@@ -45,4 +45,45 @@ public class Project {
         inverseJoinColumns = @JoinColumn(name = "fresher_id")
     )
     private Set<Fresher> freshers = new HashSet<>();
+    public Set<Fresher> getFreshers() {
+        return freshers;
+    }
+
+    public void setFreshers(Set<Fresher> freshers) {
+        this.freshers = freshers;
+    }
+
+
+    public long getTotalProjects() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getTotalProjects'");
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getManager() {
+        return manager; 
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public String getProgrammingLanguage() {
+        return programmingLanguage;
+    }
+
+    public String getStatus() {
+        return status;
+    }
 }
