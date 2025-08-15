@@ -22,19 +22,33 @@ public class ScoreServiceImpl implements ScoreService {
     @Override
     public Score createScore(Long fresherId, Score score) {
         Fresher fresher = fresherRepository.findById(fresherId)
-                .orElseThrow(() -> new RuntimeException("Fresher not found"));
+            .orElseThrow(() -> new RuntimeException("Fresher not found"));
+
+        // Gán fresher cho score
         score.setFresher(fresher);
-        return scoreRepository.save(score);
+        scoreRepository.save(score);
+
+        // Cập nhật thẳng điểm cho fresher
+        fresher.setScore(score.getScore());
+        fresherRepository.save(fresher);
+
+        return score;
     }
 
     @Override
     public Score updateScore(Long scoreId, Score updatedScore) {
         Score existing = scoreRepository.findById(scoreId)
-                .orElseThrow(() -> new RuntimeException("Score not found"));
+            .orElseThrow(() -> new RuntimeException("Score not found"));
 
         existing.setScore(updatedScore.getScore());
+        scoreRepository.save(existing);
 
-        return scoreRepository.save(existing);
+        // Đồng thời cập nhật Fresher.score
+        Fresher fresher = existing.getFresher();
+        fresher.setScore(updatedScore.getScore());
+        fresherRepository.save(fresher);
+
+        return existing;
     }
 
     @Override

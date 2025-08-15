@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.fresher_manager.dto.request.FresherRequest;
 import com.example.fresher_manager.entity.Fresher;
+import com.example.fresher_manager.entity.Score;
 import com.example.fresher_manager.repository.FresherRepository;
 import com.example.fresher_manager.repository.ScoreRepository;
 import com.example.fresher_manager.service.FresherService;
@@ -22,27 +23,59 @@ public class FresherServiceImpl implements FresherService {
 
     @Override
     public Fresher createFresher(FresherRequest request) {
-        if(fresherRepository.existsByName(request.getName())) {
+        if (fresherRepository.existsByName(request.getName())) {
             throw new IllegalArgumentException("already exist " + request.getName());
         }
-        Fresher newFresher =  Fresher.builder()
+
+        Fresher newFresher = Fresher.builder()
                 .name(request.getName())
-                .email(String.valueOf(request.getEmail()))
+                .email(request.getEmail())
                 .programingLanguage(request.getProgramingLanguage())
                 .score(request.getScore())
                 .build();
-        return fresherRepository.save(newFresher);
-    }
 
+        Fresher savedFresher = fresherRepository.save(newFresher);
+
+        // Nếu có nhập điểm, tạo score mới
+        if (request.getScore() != null) {
+            Score score = Score.builder()
+                    .score(request.getScore())
+                    .fresher(savedFresher)
+                    .build();
+            scoreRepository.save(score);
+        }
+
+        return savedFresher;
+    }
     @Override
     public Fresher updateFresher(Long id, FresherRequest request) {
         Fresher fresher = fresherRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Fresher not found"));
-            fresher.setName(request.getName());
-            fresher.setEmail(String.valueOf(request.getEmail()));
-            fresher.setProgramingLanguage(request.getProgramingLanguage());
-            fresher.setScore(request.getScore());
-        return fresherRepository.save(fresher);
+                .orElseThrow(() -> new RuntimeException("Fresher not found"));
+
+        fresher.setName(request.getName());
+        fresher.setEmail(request.getEmail());
+        fresher.setProgramingLanguage(request.getProgramingLanguage());
+        fresher.setScore(request.getScore());
+
+        Fresher updatedFresher = fresherRepository.save(fresher);
+
+        List<Score> scores = scoreRepository.findByFresherId(id);
+
+        if (scores.isEmpty()) {
+            // Chưa có → tạo mới
+            Score newScore = Score.builder()
+                    .score(request.getScore())
+                    .fresher(updatedFresher)
+                    .build();
+            scoreRepository.save(newScore);
+        } else {
+            // Đã có → cập nhật bản ghi đầu tiên
+            Score score = scores.get(0);
+            score.setScore(request.getScore());
+            scoreRepository.save(score);
+        }
+
+        return updatedFresher;
     }
 
     @Override
