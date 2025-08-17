@@ -1,0 +1,324 @@
+openapi: 3.0.0
+info:
+  title: Fresher Manager API
+  version: 1.0.0
+  description: API quản lý Fresher, Center, Project, Score và Dashboard
+servers:
+  - url: http://localhost:8080/api
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    CommonResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+        message:
+          type: string
+        data:
+          type: object
+    CenterRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        location:
+          type: string
+    CenterResponse:
+      allOf:
+        - $ref: '#/components/schemas/CenterRequest'
+        - type: object
+          properties:
+            id:
+              type: integer
+    FresherRequest:
+      type: object
+      properties:
+        name: { type: string }
+        email: { type: string }
+        programingLanguage: { type: string }
+        centerId: { type: integer }
+    FresherResponse:
+      allOf:
+        - $ref: '#/components/schemas/FresherRequest'
+        - type: object
+          properties:
+            id: { type: integer }
+    ProjectRequest:
+      type: object
+      properties:
+        name: { type: string }
+        description: { type: string }
+    ProjectResponse:
+      allOf:
+        - $ref: '#/components/schemas/ProjectRequest'
+        - type: object
+          properties:
+            id: { type: integer }
+    Score:
+      type: object
+      properties:
+        id: { type: integer }
+        subject: { type: string }
+        score: { type: number }
+        fresherId: { type: integer }
+
+paths:
+  /centers:
+    post:
+      summary: Tạo Center
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CenterRequest' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CommonResponse' }
+    get:
+      summary: Lấy tất cả Center
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CommonResponse' }
+
+  /centers/{id}:
+    get:
+      summary: Lấy Center theo ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Cập nhật Center
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CenterRequest' }
+      responses:
+        '200': { description: Updated }
+    delete:
+      summary: Xóa Center
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Deleted }
+
+  /centers/{centerId}/assign-fresher/{fresherId}:
+    post:
+      summary: Gán Fresher vào Center
+      parameters:
+        - in: path
+          name: centerId
+          required: true
+          schema: { type: integer }
+        - in: path
+          name: fresherId
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Assigned }
+
+  /freshers:
+    post:
+      summary: Tạo Fresher
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/FresherRequest' }
+      responses:
+        '201': { description: Created }
+    get:
+      summary: Lấy tất cả Fresher
+      responses:
+        '200': { description: OK }
+
+  /freshers/{id}:
+    get:
+      summary: Lấy Fresher theo ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: OK }
+    put:
+      summary: Cập nhật Fresher
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/FresherRequest' }
+      responses:
+        '200': { description: Updated }
+    delete:
+      summary: Xóa Fresher
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Deleted }
+
+  /freshers/search/name:
+    get:
+      summary: Tìm Fresher theo tên
+      parameters:
+        - in: query
+          name: name
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+
+  /freshers/search/language:
+    get:
+      summary: Tìm Fresher theo ngôn ngữ
+      parameters:
+        - in: query
+          name: language
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+
+  /freshers/search/email:
+    get:
+      summary: Tìm Fresher theo email
+      parameters:
+        - in: query
+          name: email
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+
+  /projects:
+    post:
+      summary: Tạo Project
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProjectRequest' }
+      responses:
+        '201': { description: Created }
+    get:
+      summary: Lấy tất cả Project
+      responses:
+        '200': { description: OK }
+
+  /projects/{id}:
+    get:
+      summary: Lấy Project theo ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: OK }
+    put:
+      summary: Cập nhật Project
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProjectRequest' }
+      responses:
+        '200': { description: Updated }
+    delete:
+      summary: Xóa Project
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Deleted }
+
+  /scores/fresher/{fresherId}:
+    post:
+      summary: Tạo điểm cho Fresher
+      parameters:
+        - in: path
+          name: fresherId
+          required: true
+          schema: { type: integer }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Score' }
+      responses:
+        '200': { description: Created }
+    get:
+      summary: Lấy điểm của Fresher
+      parameters:
+        - in: path
+          name: fresherId
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: OK }
+
+  /scores/{scoreId}:
+    put:
+      summary: Cập nhật điểm
+      parameters:
+        - in: path
+          name: scoreId
+          required: true
+          schema: { type: integer }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Score' }
+      responses:
+        '200': { description: Updated }
+    delete:
+      summary: Xóa điểm
+      parameters:
+        - in: path
+          name: scoreId
+          required: true
+          schema: { type: integer }
+      responses:
+        '204': { description: Deleted }
+
+  /dashboard/summary:
+    get:
+      summary: Lấy tổng quan Dashboard
+      responses:
+        '200': { description: OK }

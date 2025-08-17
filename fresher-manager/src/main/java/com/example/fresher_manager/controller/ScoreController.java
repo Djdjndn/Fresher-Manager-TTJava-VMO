@@ -28,7 +28,7 @@ public class ScoreController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/fresher/{fresherId}")
     public ResponseEntity<Score> createScore(
-            @PathVariable Long fresherId,
+            @PathVariable Long fresherId,   
             @RequestBody Score score) {
         Score created = scoreService.createScore(fresherId, score);
         return ResponseEntity.ok(created);
