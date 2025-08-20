@@ -75,6 +75,10 @@ public class Fresher {
         return this.programingLanguage;
     }
 
+    public void setProgramingLanguage(String programingLanguage) {
+        this.programingLanguage = programingLanguage;
+    }
+
     public void setScore(Double aDouble) {
         this.score = aDouble;
     }

@@ -1,7 +1,6 @@
 package com.example.fresher_manager.service.impl;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -109,20 +108,12 @@ public class FresherServiceImpl implements FresherService {
 
     @Override
     public List<Fresher> searchByProgramingLanguage(String language) {
-        List<Fresher> freshers = fresherRepository.findByProgramingLanguageContainingIgnoreCase(language);
-        if (freshers.isEmpty()){
-            throw new RuntimeException("No freshers found with programming language: " + language);
-        } else {
-            return freshers.stream()
-                .map(fresher -> Fresher.builder()
-                    .id(fresher.getId())
-                    .name(fresher.getName())
-                    .email(fresher.getEmail())
-                    .programingLanguage(fresher.getProgramingLanguage())
-                    .build())
-                .collect(Collectors.toList());
-        }
+    List<Fresher> freshers = fresherRepository.findByProgramingLanguageContainingIgnoreCase(language);
+    if (freshers.isEmpty()){
+        throw new RuntimeException("No freshers found with programming language: " + language);
     }
+    return freshers; // Trả về trực tiếp, không cần map lại
+}
 
     @Override
     public Fresher searchByEmail(String email) {

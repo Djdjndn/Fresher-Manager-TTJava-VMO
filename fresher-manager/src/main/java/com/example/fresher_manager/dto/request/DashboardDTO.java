@@ -1,4 +1,4 @@
-package com.example.fresher_manager.dto;
+package com.example.fresher_manager.dto.request;
 
 import java.util.Map;
 
